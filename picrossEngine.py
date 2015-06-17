@@ -39,8 +39,8 @@ class PicrossStage:
         self.length = length
         self.stage = stage
         self.name = name
-        columns = makeGridColumn(stage)
-        rows = makeGridRow(stage)
+        self.columns = makeGridColumn(stage)
+        self.rows = makeGridRow(stage)
 
 class PicrossCollection:
     stages = []
@@ -57,9 +57,41 @@ class PicrossCollection:
 #Here are our game functions
 def makeGridColumn(stage):
     """This function calculates our column hints"""
-    for i in stage:
-        for j in i:
-            print j
+
+    """Make a flipped version of stage"""
+    newStage = [[]]
+    column=[]
+    for k in range(len(stage)):
+        column = []
+        for j in stage:
+            column.append(j[k])
+        newStage.append(column)
+    newStage.pop(0)
+    """And now the code is pretty much the same as makeGridRow"""
+    columnHint = [[]]
+    singleColumn = []
+    streak = 0
+    for i in newStage:
+        streak = 0
+        for index,j in enumerate(i):
+            if j==1:
+                streak += 1
+            else:
+                if streak > 0:
+                    singleColumn.append(streak)
+                streak = 0
+            if (streak > 0 and (index+1 == len(newStage))):
+                singleColumn.append(streak)
+        columnHint.append(singleColumn)
+        singleColumn = []
+    columnHint.pop(0)
+    return columnHint
+    
+            
+            
+            
+#End of makeGridColumn function
+            
 def makeGridRow(stage):
     """This function calculates our row hints"""
     rowHint = [[]]
@@ -79,8 +111,7 @@ def makeGridRow(stage):
         rowHint.append(singleRow)
         singleRow = []
     rowHint.pop(0)
-    for row in rowHint:
-        print row
+    return rowHint
     
 def grabStage(path, index):
     """This function returns a stage"""
@@ -114,14 +145,30 @@ def grabStage(path, index):
     return PicrossStage(stageLength,stage,stageName)
 
 #End of GrabStage function
-                
+
+#Draw Stage Function
+def drawStage(picrossCollection, index):
+    print picrossCollection.stages[index].name
                 
 
 #GameStart
-myCollection = PicrossCollection(grabStage("stages.txt", 5))
+myCollection = PicrossCollection(grabStage("stages.txt", 1))
+myCollection.addStage(grabStage("stages.txt", 2))
+myCollection.addStage(grabStage("stages.txt", 3))
+myCollection.addStage(grabStage("stages.txt", 4))
+myCollection.addStage(grabStage("stages.txt", 5))
+#This index will be the current stage in our stage collection
+CURRENT_STAGE = 4
+
 for stages in PicrossCollection.stages:
-    for stage in stages.stage:
-        print stage
+    print "STAGE NAME - ",
+    print stages.name
+    print "STAGE LAYOUT - "
+    print stages.stage
+    print "COLUMN HINT - "
+    print stages.columns
+    print "ROW HINT - "
+    print stages.rows
 
 #Here is our gameLoop
 while not exitGame:
@@ -132,6 +179,10 @@ while not exitGame:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exitGame = True
+
+    #Draw our stage
+    drawStage(myCollection,CURRENT_STAGE-1)
+            
     #Display Update
     pygame.display.update()
 
