@@ -184,7 +184,7 @@ def drawStage(picrossCollection, index):
             enabled = False
             if (tempStage.stage[i][j] == 1):
                 enabled = True
-            tempGrid.append(Box(tempStage.length,((j+1)*10),((i+1)*10), enabled))
+            tempGrid.append(Box(tempStage.length,(((j+1)*10)+225),(((i+1)*10)+125), enabled))
             enabled = False
     """Now let's draw us some boxes!"""
     for i in tempGrid:
@@ -204,7 +204,7 @@ myCollection.addStage(grabStage("stages.txt", 4))
 myCollection.addStage(grabStage("stages.txt", 5))
 myCollection.addStage(grabStage("stages.txt", 6))
 #This index will be the current stage in our stage collection
-CURRENT_STAGE = 6
+CURRENT_STAGE = 4
 
 for stages in PicrossCollection.stages:
     print "STAGE NAME - ",
