@@ -22,11 +22,14 @@ FONT_SIZE = 15
 
 BACKGROUND_COLOR = WHITE
 
+BACKGROUND_FILE = "lib/background.jpg"
+
 #Set up the game environment
 screen = pygame.display.set_mode(SCREEN_SIZE)
 clock = pygame.time.Clock()
 pygame.display.set_caption(GAME_TITLE)
 screen.fill(BACKGROUND_COLOR)
+background = pygame.image.load(BACKGROUND_FILE)
 
 #Game Loop variables
 exitGame = False
@@ -174,8 +177,10 @@ def drawLabel(font, size, color, text, location):
 
 #Draw Stage Function
 def drawStage(picrossCollection, index):
+    """Let's blit the background to the screen first"""
+    screen.blit(background,(0,0))
     """Here we write a label to the screen displaying the stage name      -                                                                 NAME LOCATION"""
-    drawLabel(GAME_FONT, FONT_SIZE, BLACK, ("Stage: %s" % picrossCollection.stages[index].name),(225,25))
+    drawLabel(GAME_FONT, FONT_SIZE, BLACK, ("Stage: %s" % picrossCollection.stages[index].name),(235,47))
     """Let's declare some shortcut variables to make this process easier"""
     tempStage = picrossCollection.stages[index]
     tempGrid = []
@@ -204,7 +209,7 @@ myCollection.addStage(grabStage("stages.txt", 4))
 myCollection.addStage(grabStage("stages.txt", 5))
 myCollection.addStage(grabStage("stages.txt", 6))
 #This index will be the current stage in our stage collection
-CURRENT_STAGE = 4
+CURRENT_STAGE = 5
 
 for stages in PicrossCollection.stages:
     print "STAGE NAME - ",
