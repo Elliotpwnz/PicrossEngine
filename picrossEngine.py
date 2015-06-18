@@ -17,6 +17,9 @@ RED =   (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE =  (0, 0,   0)
 
+GAME_FONT = "monospace"
+FONT_SIZE = 15
+
 BACKGROUND_COLOR = WHITE
 
 #Set up the game environment
@@ -52,7 +55,21 @@ class PicrossCollection:
     def addStage(self, picrossStage):
         self.stages.append(picrossStage)
         self.stageNames.append(picrossStage.name)
-        
+
+class Box:
+    width = 0
+    enabled = False
+    locationX = 0
+    locationY = 0
+    boxSprite = None 
+    def __init__(self, width, locationX, locationY, enabled):
+        self.width = width
+        self.enabled = enabled
+        self.locationX = locationX
+        self.locationY = locationY
+        self.boxSprite = pygame.Rect(self.locationX, self.locationY, self.width, self.width)
+    def enable(self):
+        self.enabled = True
     
 #Here are our game functions
 def makeGridColumn(stage):
@@ -146,19 +163,48 @@ def grabStage(path, index):
 
 #End of GrabStage function
 
+#This function will simplify the label making process
+def drawLabel(font, size, color, text, location):
+    """Use the global screen"""
+    global screen
+    myFont = pygame.font.SysFont(font, size)
+    myLabel = myFont.render(text,1,color)
+    screen.blit(myLabel, location)
+    
+
 #Draw Stage Function
 def drawStage(picrossCollection, index):
-    print picrossCollection.stages[index].name
-                
+    """Here we write a label to the screen displaying the stage name      -                                                                 NAME LOCATION"""
+    drawLabel(GAME_FONT, FONT_SIZE, BLACK, ("Stage: %s" % picrossCollection.stages[index].name),(225,25))
+    """Let's declare some shortcut variables to make this process easier"""
+    tempStage = picrossCollection.stages[index]
+    tempGrid = []
+    for i in range(tempStage.length):
+        for j in range(tempStage.length):
+            enabled = False
+            if (tempStage.stage[i][j] == 1):
+                enabled = True
+            tempGrid.append(Box(tempStage.length,((j+1)*10),((i+1)*10), enabled))
+            enabled = False
+    """Now let's draw us some boxes!"""
+    for i in tempGrid:
+        tempWidth = 1
+        if (i.enabled):
+            tempWidth = 0
+        pygame.draw.rect(screen, BLACK, i.boxSprite,tempWidth)
+        tempWidth = 1
+            
 
 #GameStart
+"""THIS WILL BE A LOOP IN THE FUTURE"""
 myCollection = PicrossCollection(grabStage("stages.txt", 1))
 myCollection.addStage(grabStage("stages.txt", 2))
 myCollection.addStage(grabStage("stages.txt", 3))
 myCollection.addStage(grabStage("stages.txt", 4))
 myCollection.addStage(grabStage("stages.txt", 5))
+myCollection.addStage(grabStage("stages.txt", 6))
 #This index will be the current stage in our stage collection
-CURRENT_STAGE = 4
+CURRENT_STAGE = 6
 
 for stages in PicrossCollection.stages:
     print "STAGE NAME - ",
