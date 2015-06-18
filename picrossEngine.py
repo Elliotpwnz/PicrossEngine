@@ -17,7 +17,7 @@ WHITE = (255,255,255)
 BLACK = (0,  0,  0)
 RED =   (255, 0, 0)
 GREEN = (0, 255, 0)
-BLUE =  (0, 0,   0)
+BLUE =  (0, 0,   255)
 
 GAME_FONT = "monospace"
 FONT_SIZE = 15
@@ -206,14 +206,24 @@ def drawStage(picrossCollection, index):
     """ROW"""
     for i in range(tempStage.length):
             tempStr = str(tempStage.rows[i]).replace("[","").replace("]","").replace(","," ")
-            drawLabel(GAME_FONT,HINT_FONT_SIZE,BLACK,tempStr,(tempStartingPointX * .6,(tempStartingPointY+BOX_WIDTH) + (i*BOX_WIDTH)) )
+            tempColor = BLACK
+            if (i % 2 == 0):
+                tempColor = BLUE
+            else:
+                tempColor = RED
+            drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStr,(tempStartingPointX * .6,(tempStartingPointY+BOX_WIDTH) + (i*BOX_WIDTH)) )
     """COLUMN"""
     for i in range(tempStage.length):
              tempStr = str(tempStage.columns[i]).replace("[","").replace("]","").replace(",","\n").replace(" ","")
              tempCount = tempStr.count('\n')+1
+             tempColor = BLACK
+             if (i % 2 == 0):
+                 tempColor = BLUE
+             else:
+                tempColor = RED
              for j in range(tempCount):
                  tempStrList = tempStr.split('\n')
-                 drawLabel(GAME_FONT,HINT_FONT_SIZE,BLACK,tempStrList[j],((tempStartingPointX+BOX_WIDTH) + (i*BOX_WIDTH),tempStartingPointY *.65 + (j*BOX_WIDTH)))
+                 drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStrList[j],((tempStartingPointX+BOX_WIDTH) + (i*BOX_WIDTH),tempStartingPointY *.65 + (j*BOX_WIDTH)))
 
     """TEMPORARY - HERE WE ENABLE THE SQUARES"""
     for i in range(tempStage.length):
