@@ -21,6 +21,7 @@ BLUE =  (0, 0,   0)
 
 GAME_FONT = "monospace"
 FONT_SIZE = 15
+HINT_FONT_SIZE = 12
 
 BACKGROUND_COLOR = WHITE
 
@@ -200,6 +201,11 @@ def drawStage(picrossCollection, index):
     else:
         tempStartingPointX = (SCREEN_WIDTH * .375)
         tempStartingPointY = (SCREEN_HEIGHT * .3125)
+
+    """Here we print the row/column hints to the screen"""
+    for i in range(tempStage.length):
+            tempStr = str(tempStage.rows[i]).replace("[","").replace("]","").replace(","," ")
+            drawLabel(GAME_FONT,HINT_FONT_SIZE,BLACK,tempStr,(tempStartingPointX * .6,(tempStartingPointY+BOX_WIDTH) + (i*BOX_WIDTH)) )
 
     """TEMPORARY - HERE WE ENABLE THE SQUARES"""
     for i in range(tempStage.length):
