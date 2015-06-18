@@ -203,9 +203,17 @@ def drawStage(picrossCollection, index):
         tempStartingPointY = (SCREEN_HEIGHT * .3125)
 
     """Here we print the row/column hints to the screen"""
+    """ROW"""
     for i in range(tempStage.length):
             tempStr = str(tempStage.rows[i]).replace("[","").replace("]","").replace(","," ")
             drawLabel(GAME_FONT,HINT_FONT_SIZE,BLACK,tempStr,(tempStartingPointX * .6,(tempStartingPointY+BOX_WIDTH) + (i*BOX_WIDTH)) )
+    """COLUMN"""
+    for i in range(tempStage.length):
+             tempStr = str(tempStage.columns[i]).replace("[","").replace("]","").replace(",","\n").replace(" ","")
+             tempCount = tempStr.count('\n')+1
+             for j in range(tempCount):
+                 tempStrList = tempStr.split('\n')
+                 drawLabel(GAME_FONT,HINT_FONT_SIZE,BLACK,tempStrList[j],((tempStartingPointX+BOX_WIDTH) + (i*BOX_WIDTH),tempStartingPointY *.65 + (j*BOX_WIDTH)))
 
     """TEMPORARY - HERE WE ENABLE THE SQUARES"""
     for i in range(tempStage.length):
