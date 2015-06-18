@@ -7,7 +7,9 @@ import pygame, sys
 pygame.init()
 
 #Declare constants
-SCREEN_SIZE = (600,400)
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 400
+SCREEN_SIZE = (SCREEN_WIDTH,SCREEN_HEIGHT)
 GAME_TITLE = "Picross Engine"
 
          #R   G   B
@@ -23,6 +25,8 @@ FONT_SIZE = 15
 BACKGROUND_COLOR = WHITE
 
 BACKGROUND_FILE = "lib/background.jpg"
+
+BOX_WIDTH = 15
 
 #Set up the game environment
 screen = pygame.display.set_mode(SCREEN_SIZE)
@@ -180,16 +184,31 @@ def drawStage(picrossCollection, index):
     """Let's blit the background to the screen first"""
     screen.blit(background,(0,0))
     """Here we write a label to the screen displaying the stage name      -                                                                 NAME LOCATION"""
-    drawLabel(GAME_FONT, FONT_SIZE, BLACK, ("Stage: %s" % picrossCollection.stages[index].name),(235,47))
+    drawLabel(GAME_FONT, FONT_SIZE, BLACK, ("Stage: %s" % picrossCollection.stages[index].name),(int(SCREEN_WIDTH*.392),(int(SCREEN_HEIGHT*.1175))))
     """Let's declare some shortcut variables to make this process easier"""
     tempStage = picrossCollection.stages[index]
     tempGrid = []
+    """Here we set the location of the puzzle depending on the size"""
+    tempStartingPointX = 0
+    tempStartingPointY = 0
+    if (tempStage.length == 5):
+        tempStartingPointX = (SCREEN_WIDTH * .43)
+        tempStartingPointY = (SCREEN_HEIGHT * .47)
+    elif (tempStage.length == 10):
+        tempStartingPointX = (SCREEN_WIDTH * .36)
+        tempStartingPointY = (SCREEN_HEIGHT * .39)
+    else:
+        tempStartingPointX = (SCREEN_WIDTH * .375)
+        tempStartingPointY = (SCREEN_HEIGHT * .3125)
+
+    """TEMPORARY - HERE WE ENABLE THE SQUARES"""
     for i in range(tempStage.length):
         for j in range(tempStage.length):
             enabled = False
             if (tempStage.stage[i][j] == 1):
                 enabled = True
-            tempGrid.append(Box(tempStage.length,(((j+1)*10)+225),(((i+1)*10)+125), enabled))
+            """Here we create our boxes and add them to the grid"""
+            tempGrid.append(Box(BOX_WIDTH,(((j+1)*BOX_WIDTH)+tempStartingPointX),(((i+1)*BOX_WIDTH)+tempStartingPointY), enabled))
             enabled = False
     """Now let's draw us some boxes!"""
     for i in tempGrid:
@@ -208,8 +227,10 @@ myCollection.addStage(grabStage("stages.txt", 3))
 myCollection.addStage(grabStage("stages.txt", 4))
 myCollection.addStage(grabStage("stages.txt", 5))
 myCollection.addStage(grabStage("stages.txt", 6))
+myCollection.addStage(grabStage("stages.txt", 7))
+myCollection.addStage(grabStage("stages.txt", 8))
 #This index will be the current stage in our stage collection
-CURRENT_STAGE = 5
+CURRENT_STAGE = 8
 
 for stages in PicrossCollection.stages:
     print "STAGE NAME - ",
