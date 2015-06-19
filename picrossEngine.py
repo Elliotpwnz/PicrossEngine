@@ -253,6 +253,7 @@ myCollection.addStage(grabStage("stages.txt", 5))
 myCollection.addStage(grabStage("stages.txt", 6))
 myCollection.addStage(grabStage("stages.txt", 7))
 myCollection.addStage(grabStage("stages.txt", 8))
+myCollection.addStage(grabStage("stages.txt", 9))
 #This index will be the current stage in our stage collection
 CURRENT_STAGE = 8
 
