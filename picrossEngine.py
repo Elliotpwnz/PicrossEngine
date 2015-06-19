@@ -26,6 +26,7 @@ HINT_FONT_SIZE = 12
 BACKGROUND_COLOR = WHITE
 
 BACKGROUND_FILE = "lib/background.jpg"
+X_FILE = "lib/x.png"
 
 BOX_WIDTH = 15
 
@@ -34,7 +35,8 @@ screen = pygame.display.set_mode(SCREEN_SIZE)
 clock = pygame.time.Clock()
 pygame.display.set_caption(GAME_TITLE)
 screen.fill(BACKGROUND_COLOR)
-background = pygame.image.load(BACKGROUND_FILE)
+background = pygame.image.load(BACKGROUND_FILE).convert()
+x_marker = pygame.image.load(X_FILE).convert_alpha()
 
 #Game Loop variables
 exitGame = False
@@ -181,7 +183,7 @@ def drawLabel(font, size, color, text, location):
     
 
 #Draw Stage Function
-def drawStage(picrossCollection, index):
+def drawStage(picrossCollection, index, solution, clickSet):
     """Let's blit the background to the screen first"""
     screen.blit(background,(0,0))
     """Here we write a label to the screen displaying the stage name      -                                                                 NAME LOCATION"""
@@ -225,6 +227,7 @@ def drawStage(picrossCollection, index):
                  tempStrList = tempStr.split('\n')
                  drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStrList[j],((tempStartingPointX+BOX_WIDTH) + (i*BOX_WIDTH),tempStartingPointY *.65 + (j*BOX_WIDTH)))
 
+    tempGrid2 = [[]]
     """TEMPORARY - HERE WE ENABLE THE SQUARES"""
     for i in range(tempStage.length):
         for j in range(tempStage.length):
@@ -234,14 +237,45 @@ def drawStage(picrossCollection, index):
             """Here we create our boxes and add them to the grid"""
             tempGrid.append(Box(BOX_WIDTH,(((j+1)*BOX_WIDTH)+tempStartingPointX),(((i+1)*BOX_WIDTH)+tempStartingPointY), enabled))
             enabled = False
+        tempGrid2.append(tempGrid)
+        tempGrid = []
+    tempGrid2.pop(0)
     """Now let's draw us some boxes!"""
-    for i in tempGrid:
-        tempWidth = 1
-        if (i.enabled):
-            tempWidth = 0
-        pygame.draw.rect(screen, BLACK, i.boxSprite,tempWidth)
-        tempWidth = 1
-            
+    for indexI,i in enumerate(tempGrid2):
+        for indexJ,j in enumerate(i):
+            tempWidth = 1
+            if (j.enabled and clickSet[indexI][indexJ] == 1):
+                tempWidth = 0
+            elif (clickSet[indexI][indexJ] == 2):
+                screen.blit(x_marker,(j.locationX,j.locationY))
+            pygame.draw.rect(screen, BLACK, j.boxSprite,tempWidth)
+            tempWidth = 1
+    solutionGrid = tempGrid2
+    return solutionGrid
+
+#GameSetup function
+def gameSetup(collection, index):
+    tempClickSet = [[]]
+    tempClickSet2 = []
+    for i in range(collection.stages[index].length):
+        for j in range(collection.stages[index].length):
+            tempClickSet2.append(0)
+        tempClickSet.append(tempClickSet2)
+        tempClickSet2 = []
+    tempClickSet.pop(0)
+    return tempClickSet
+
+#Click handler - A left click is the value 1, and a right click is the value 2
+def clickHandler(gameState, leftOrRight, mousePosition, clickSet, solution):
+    if gameState == "game":
+        for i in range(len(clickSet)):
+            for j in range(len(clickSet)):
+                if (solution[i][j].boxSprite.collidepoint(mousePosition)):
+                    clickSet[i][j] = leftOrRight
+                    print "clicked on %s,%s" % (i,j) 
+    else:
+        print "Not in game"
+    return clickSet
 
 #GameStart
 """THIS WILL BE A LOOP IN THE FUTURE"""
@@ -255,30 +289,48 @@ myCollection.addStage(grabStage("stages.txt", 7))
 myCollection.addStage(grabStage("stages.txt", 8))
 myCollection.addStage(grabStage("stages.txt", 9))
 #This index will be the current stage in our stage collection
-CURRENT_STAGE = 8
-
-for stages in PicrossCollection.stages:
-    print "STAGE NAME - ",
-    print stages.name
-    print "STAGE LAYOUT - "
-    print stages.stage
-    print "COLUMN HINT - "
-    print stages.columns
-    print "ROW HINT - "
-    print stages.rows
+CURRENT_STAGE = 7
+#This variable keeps track of which boxes have been clicked
+clickSet = [[]]
+solutionGrid = []
+setup = True
+#GameState
+GAME_STATE = "game"
 
 #Here is our gameLoop
 while not exitGame:
     #Cap our game at 30 fps
     clock.tick(30)
 
+    #Do some setup related things
+    if setup:
+        clickSet = gameSetup(myCollection,CURRENT_STAGE-1)
+        setup = False
+
     #Event Handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exitGame = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                if CURRENT_STAGE > 1:
+                    CURRENT_STAGE -= 1
+                    clickSet = gameSetup(myCollection,CURRENT_STAGE-1)
+                    setup=True
+            elif event.key == pygame.K_RIGHT:
+                if CURRENT_STAGE < len(myCollection.stages):
+                    CURRENT_STAGE += 1
+                    clickSet = gameSetup(myCollection,CURRENT_STAGE-1)
+                    setup = True
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 3: #Right Click
+                clickSet = clickHandler(GAME_STATE, 2, pygame.mouse.get_pos(),clickSet, solutionGrid)
+            else: #Left Click
+                clickSet = clickHandler(GAME_STATE, 1, pygame.mouse.get_pos(),clickSet, solutionGrid)
+            
 
     #Draw our stage
-    drawStage(myCollection,CURRENT_STAGE-1)
+    solutionGrid = drawStage(myCollection,CURRENT_STAGE-1, solutionGrid, clickSet)
             
     #Display Update
     pygame.display.update()
