@@ -271,7 +271,11 @@ def clickHandler(gameState, leftOrRight, mousePosition, clickSet, solution):
         for i in range(len(clickSet)):
             for j in range(len(clickSet)):
                 if (solution[i][j].boxSprite.collidepoint(mousePosition)):
-                    clickSet[i][j] = leftOrRight
+                    if (clickSet[i][j] == 0):
+                        clickSet[i][j] = leftOrRight
+                    elif (clickSet[i][j] == 2):
+                        if (leftOrRight == 2):
+                            clickSet[i][j] = 0
                     print "clicked on %s,%s" % (i,j) 
     else:
         print "Not in game"
