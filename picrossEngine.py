@@ -288,6 +288,12 @@ myCollection.addStage(grabStage("stages.txt", 6))
 myCollection.addStage(grabStage("stages.txt", 7))
 myCollection.addStage(grabStage("stages.txt", 8))
 myCollection.addStage(grabStage("stages.txt", 9))
+myCollection.addStage(grabStage("stages.txt", 10))
+myCollection.addStage(grabStage("stages.txt", 11))
+myCollection.addStage(grabStage("stages.txt", 12))
+myCollection.addStage(grabStage("stages.txt", 13))
+myCollection.addStage(grabStage("stages.txt", 14))
+myCollection.addStage(grabStage("stages.txt", 15))
 #This index will be the current stage in our stage collection
 CURRENT_STAGE = 7
 #This variable keeps track of which boxes have been clicked
