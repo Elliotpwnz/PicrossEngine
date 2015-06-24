@@ -246,6 +246,8 @@ def drawStage(picrossCollection, index, solution, clickSet):
             tempWidth = 1
             if (j.enabled and clickSet[indexI][indexJ] == 1):
                 tempWidth = 0
+            elif (clickSet[indexI][indexJ] == 1):
+                clickSet[indexI][indexJ] = 0
             elif (clickSet[indexI][indexJ] == 2):
                 screen.blit(x_marker,(j.locationX,j.locationY))
             pygame.draw.rect(screen, BLACK, j.boxSprite,tempWidth)
@@ -299,13 +301,15 @@ myCollection.addStage(grabStage("stages.txt", 13))
 myCollection.addStage(grabStage("stages.txt", 14))
 myCollection.addStage(grabStage("stages.txt", 15))
 #This index will be the current stage in our stage collection
-CURRENT_STAGE = 7
+CURRENT_STAGE = 9
 #This variable keeps track of which boxes have been clicked
 clickSet = [[]]
 solutionGrid = []
 setup = True
 #GameState
 GAME_STATE = "game"
+#this variable keeps track of whether the left mouse button is up or down
+leftDown = False
 
 #Here is our gameLoop
 while not exitGame:
@@ -336,8 +340,15 @@ while not exitGame:
             if event.button == 3: #Right Click
                 clickSet = clickHandler(GAME_STATE, 2, pygame.mouse.get_pos(),clickSet, solutionGrid)
             else: #Left Click
+                leftDown = True
                 clickSet = clickHandler(GAME_STATE, 1, pygame.mouse.get_pos(),clickSet, solutionGrid)
-            
+        if event.type == pygame.MOUSEBUTTONUP:
+            if (leftDown and event.button == 1):
+                leftDown = False
+
+    #If our left mouse button is down
+    if (leftDown):
+        clickSet = clickHandler(GAME_STATE, 1, pygame.mouse.get_pos(),clickSet, solutionGrid)
 
     #Draw our stage
     solutionGrid = drawStage(myCollection,CURRENT_STAGE-1, solutionGrid, clickSet)
