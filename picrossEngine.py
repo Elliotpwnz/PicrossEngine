@@ -224,6 +224,7 @@ def drawStage(picrossCollection, index, solution, clickSet):
     for i in range(tempStage.length):
              tempStr = str(tempStage.columns[i]).replace("[","").replace("]","").replace(",","\n").replace(" ","")
              tempCount = tempStr.count('\n')+1
+             tempStrSize = tempCount * BOX_WIDTH
              tempColor = BLACK
              if (i % 2 == 0):
                  tempColor = BLUE
@@ -231,7 +232,7 @@ def drawStage(picrossCollection, index, solution, clickSet):
                 tempColor = RED
              for j in range(tempCount):
                  tempStrList = tempStr.split('\n')
-                 drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStrList[j],((tempStartingPointX+BOX_WIDTH) + (i*BOX_WIDTH),tempStartingPointY * .65 + (j*BOX_WIDTH)))
+                 drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStrList[j],((tempStartingPointX+BOX_WIDTH) + (i*BOX_WIDTH),tempStartingPointY * .99 - tempStrSize + (BOX_WIDTH/2) + (j*BOX_WIDTH)))
 
     tempGrid2 = [[]]
     """TEMPORARY - HERE WE ENABLE THE SQUARES"""
