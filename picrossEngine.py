@@ -27,6 +27,7 @@ BACKGROUND_COLOR = WHITE
 
 BACKGROUND_FILE = "lib/background.jpg"
 X_FILE = "lib/x.png"
+GAME_ICON_FILE = "lib/game_icon.png"
 
 BOX_WIDTH = 15
 
@@ -37,6 +38,8 @@ pygame.display.set_caption(GAME_TITLE)
 screen.fill(BACKGROUND_COLOR)
 background = pygame.image.load(BACKGROUND_FILE).convert()
 x_marker = pygame.image.load(X_FILE).convert_alpha()
+game_icon = pygame.image.load(GAME_ICON_FILE).convert_alpha()
+pygame.display.set_icon(game_icon)
 
 #Game Loop variables
 exitGame = False
@@ -208,12 +211,14 @@ def drawStage(picrossCollection, index, solution, clickSet):
     """ROW"""
     for i in range(tempStage.length):
             tempStr = str(tempStage.rows[i]).replace("[","").replace("]","").replace(","," ")
+            #This tempStrSize variable helps us measure the width of the string, to help us offset the text and get it as close as possible to the grid
+            tempStrSize = pygame.font.SysFont(GAME_FONT,HINT_FONT_SIZE).size(tempStr)[0]
             tempColor = BLACK
             if (i % 2 == 0):
                 tempColor = BLUE
             else:
                 tempColor = RED
-            drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStr,(tempStartingPointX * .6,(tempStartingPointY+BOX_WIDTH) + (i*BOX_WIDTH)) )
+            drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStr,(tempStartingPointX * .99 - tempStrSize + (BOX_WIDTH/2),(tempStartingPointY+BOX_WIDTH) + (i*BOX_WIDTH)) )
     """COLUMN"""
     for i in range(tempStage.length):
              tempStr = str(tempStage.columns[i]).replace("[","").replace("]","").replace(",","\n").replace(" ","")
@@ -225,7 +230,7 @@ def drawStage(picrossCollection, index, solution, clickSet):
                 tempColor = RED
              for j in range(tempCount):
                  tempStrList = tempStr.split('\n')
-                 drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStrList[j],((tempStartingPointX+BOX_WIDTH) + (i*BOX_WIDTH),tempStartingPointY *.65 + (j*BOX_WIDTH)))
+                 drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStrList[j],((tempStartingPointX+BOX_WIDTH) + (i*BOX_WIDTH),tempStartingPointY * .65 + (j*BOX_WIDTH)))
 
     tempGrid2 = [[]]
     """TEMPORARY - HERE WE ENABLE THE SQUARES"""
