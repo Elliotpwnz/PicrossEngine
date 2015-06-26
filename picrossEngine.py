@@ -11,6 +11,7 @@ SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 400
 SCREEN_SIZE = (SCREEN_WIDTH,SCREEN_HEIGHT)
 GAME_TITLE = "Picross Engine"
+FRAME_RATE = 30
 
          #R   G   B
 WHITE = (255,255,255)
@@ -323,8 +324,8 @@ leftDown = False
 
 #Here is our gameLoop
 while not exitGame:
-    #Cap our game at 30 fps
-    clock.tick(30)
+    #Cap the game frame rate
+    clock.tick(FRAME_RATE)
 
     #Do some setup related things
     if setup:
