@@ -215,24 +215,30 @@ def drawStage(picrossCollection, index, solution, clickSet):
             #This tempStrSize variable helps us measure the width of the string, to help us offset the text and get it as close as possible to the grid
             tempStrSize = pygame.font.SysFont(GAME_FONT,HINT_FONT_SIZE).size(tempStr)[0]
             tempColor = BLACK
+            #This if statement adds the help marker on the current row
+            if (pygame.mouse.get_pos()[1] >((tempStartingPointY+BOX_WIDTH) + (i*BOX_WIDTH)) and pygame.mouse.get_pos()[1] < ((tempStartingPointY+BOX_WIDTH) + ((i+1)*BOX_WIDTH))):
+                 drawLabel(GAME_FONT,HINT_FONT_SIZE,BLACK,">",((tempStartingPointX * .99), tempStartingPointY + (BOX_WIDTH * (i+1))))
             if (i % 2 == 0):
                 tempColor = BLUE
             else:
                 tempColor = RED
-            drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStr,(tempStartingPointX * .99 - tempStrSize + (BOX_WIDTH/2),(tempStartingPointY+BOX_WIDTH) + (i*BOX_WIDTH)) )
+            drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStr,(tempStartingPointX * .94 - tempStrSize + (BOX_WIDTH/2),(tempStartingPointY+BOX_WIDTH) + (i*BOX_WIDTH)) )
     """COLUMN"""
     for i in range(tempStage.length):
              tempStr = str(tempStage.columns[i]).replace("[","").replace("]","").replace(",","\n").replace(" ","")
              tempCount = tempStr.count('\n')+1
              tempStrSize = tempCount * BOX_WIDTH
              tempColor = BLACK
+             #This if statement adds the help marker on the current column
+             if (pygame.mouse.get_pos()[0] >((tempStartingPointX+BOX_WIDTH) + (i*BOX_WIDTH)) and pygame.mouse.get_pos()[0] < ((tempStartingPointX+BOX_WIDTH) + ((i+1)*BOX_WIDTH))):
+                 drawLabel(GAME_FONT,HINT_FONT_SIZE,BLACK,"V",((tempStartingPointX+BOX_WIDTH) + (i*BOX_WIDTH), tempStartingPointY * .99))
              if (i % 2 == 0):
                  tempColor = BLUE
              else:
                 tempColor = RED
              for j in range(tempCount):
                  tempStrList = tempStr.split('\n')
-                 drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStrList[j],((tempStartingPointX+BOX_WIDTH) + (i*BOX_WIDTH),tempStartingPointY * .99 - tempStrSize + (BOX_WIDTH/2) + (j*BOX_WIDTH)))
+                 drawLabel(GAME_FONT,HINT_FONT_SIZE,tempColor,tempStrList[j],((tempStartingPointX+BOX_WIDTH) + (i*BOX_WIDTH),tempStartingPointY * .95 - tempStrSize + (BOX_WIDTH/2) + (j*BOX_WIDTH)))
 
     tempGrid2 = [[]]
     """TEMPORARY - HERE WE ENABLE THE SQUARES"""
